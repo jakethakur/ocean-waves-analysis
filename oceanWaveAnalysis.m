@@ -1,3 +1,8 @@
+% first run vertigo raw csv file on autowave.m
+% then import this data from home -> import data -> select the csv file
+% -> output type column vectors -> import selection
+% then run this program (which will use the varName1 and varName2 vars)
+
 time = VarName1;
 rawDownData = VarName2;
 

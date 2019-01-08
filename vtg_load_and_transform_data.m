@@ -27,7 +27,7 @@ euldata = zeros(length(quatdata), 3);
 for i = 1:length(quatdata)
     euldata(i,:) = quat2eul(quatdata(i,3:6),'ZYZ');
 end
-%euldata = vtg_quat2eul(quatdata);
+euldata = vtg_quat2eul(quatdata);
 
 
 t = imudata(:,1); %Time Variable

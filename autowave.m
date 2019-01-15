@@ -126,7 +126,7 @@ if Direction == 1
 
 Time = imudata(100*Time_window1:100*Time_window2,1);
 
-north = remove_drift(North - pvn, Time);
+north = North - pvn;
 % 
 % 
 figure;
@@ -151,7 +151,7 @@ end
 
 Time = imudata(100*Time_window1:100*Time_window2,1);
 
-east = remove_drift(East - pve, Time);
+east = East - pve;
 figure;
 subplot(3,1,1);
     plot (Time, east)
@@ -175,7 +175,7 @@ subplot(3,1,1);
 
 Time = imudata(100*Time_window1:100*Time_window2,1);
 
-down = remove_drift(Down - pvd, Time);
+down = Down - pvd;
 figure;
 subplot(3,1,1);
     plot (Time, down)

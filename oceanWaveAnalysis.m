@@ -12,7 +12,7 @@ rawDownData = VarName2;
 %cadence = 5;
 cadence = 500;
 
-% Cut down data to cadence (smaller sampling rate
+% Cut down data to cadence (smaller sampling rate)
 % moving mean
 aveRawDownData = movmean(rawDownData,cadence)-1;
 % decimation (alternate method)

@@ -6,8 +6,11 @@
 % Get raw data
 [csvfile, csvpath] = uigetfile('*.csv');
 csvdata = csvread([csvpath csvfile]);
+
 % for greater gps resolution use command below
 %csvdata = dlmread([csvpath csvfile]);
+
+csvdata(:,1) = formatLongData(csvdata(:,1)); % for long data
 
 % Split into GPS and IMU data
 gpsidx = find(csvdata(:,2) == 1);

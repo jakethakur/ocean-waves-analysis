@@ -1,0 +1,45 @@
+function correctedY = removeDriftTurningPoints(time,yVals)
+    a = yVals(1:end-2);
+    b = yVals(2:end-1);
+    c = yVals(3:end);
+    turningPoints = find((b<a & b<c) | (b>a & b>c))+1; % locations of turning points in yVals
+    
+    % find inflection points
+    inflectionPoints = zeros(floor(length(turningPoints) / 2), 2);
+    for i = 1:length(inflectionPoints)
+        % index of analysed turning points
+        t1Index = 2*i - 1;
+        t2Index = 2*i;
+        
+        % avg time
+        t = (time(turningPoints(t1Index)) + time(turningPoints(t2Index))) / 2;
+        
+        % avg y value
+        y = (yVals(turningPoints(t1Index)) + yVals(turningPoints(t2Index))) / 2;
+        
+        inflectionPoints(i, 1) = t;
+        inflectionPoints(i, 2) = y;
+    end
+    
+    % take polyfit of inflection points
+    pcd = polyfit(inflectionPoints(:, 1),inflectionPoints(:, 2),3);
+    pvd = polyval(pcd,time);
+    
+    % subtract this polyfit
+    correctedY = yVals - pvd;
+    
+    % visuals
+%     figure;
+%     hold on;
+%     plot(time, yVals); % initial curve
+%     plot(time(turningPoints), yVals(turningPoints), 'O'); % turning points
+%     plot(inflectionPoints(:, 1), inflectionPoints(:, 2), 'O'); % inflection points
+%     plot(time, pvd); % polyfit
+%     legend("initial data", "turning points", "inflection points", "polyfit");
+%     figure;
+%     plot(time, correctedY); % new curve
+
+    % still not perfect
+    % https://uk.mathworks.com/matlabcentral/fileexchange/54207-polyfix-x-y-n-xfix-yfix-xder-dydx
+end
+

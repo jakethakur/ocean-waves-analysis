@@ -1,16 +1,16 @@
-% first run vertigo raw csv file on autowave.m
+% first run vertigo raw csv file on Convert_ocean_data.m
 % then import this data from home -> import data -> select the csv file
 % -> output type column vectors -> import selection
 % then run this program (which will use the varName1 and varName2 vars)
 
-time = VarName1;
-rawDownData = VarName2;
+%time = VarName1;
+%rawDownData = VarName2;
 
-%time = imudata(:, 1);
-%rawDownData = (accel_ned(:, 3) - 1) * 9.81;
+time = imudata(:, 1);
+rawDownData = (accel_ned(:, 3) - 1) * 9.81;
 
-%cadence = 5;
-cadence = 500;
+cadence = 5;
+%cadence = 500;
 
 % Cut down data to cadence (smaller sampling rate)
 % moving mean
@@ -21,7 +21,7 @@ aveRawDownData = movmean(rawDownData,cadence)-1;
 
 % Integrating raw data into velocity and displacement
 downVelData = cumtrapz(9.81*aveRawDownData)*0.00005;
-downVelDataDrift = detrend(downVelData);
+%downVelDataDrift = detrend(downVelData);
 
 % Attempt to curve fit all of the data after linear drift has been removed.
 pvalue = 4;

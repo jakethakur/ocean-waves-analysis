@@ -10,6 +10,16 @@ cadenceStart = 1;
 cadenceIncrement = 200;
 cadenceFinish = 5001;
 
+prompt = 'What time do you wish to start analysis from? ';
+Time_window1 = input(prompt);
+prompt = 'What time do you wish to end the analysis? ';
+Time_window2 = input(prompt);
+
+% truncate data to the time windows
+samplingRate = 200; % Hz
+time = time(200*Time_window1:200*Time_window2);
+rawDownData = rawDownData(200*Time_window1:200*Time_window2);
+
 close all; % close all previous figure windows
 
 for cadence = cadenceStart:cadenceIncrement:cadenceFinish % iterate cadence
@@ -23,10 +33,10 @@ for cadence = cadenceStart:cadenceIncrement:cadenceFinish % iterate cadence
 
     % Integrating raw data into velocity and displacement
     downVelData = cumtrapz(9.81*aveRawDownData)*0.00005;
-    downVelDataDrift = detrend(downVelData);
+    %downVelDataDrift = detrend(downVelData);
 
     % Attempt to curve fit all of the data after linear drift has been removed.
-    pvalue = 4;
+    pvalue = 3; % used to be 4
     pcd = polyfit(time, downVelData, pvalue);
     pvd = polyval(pcd, time);
     downVelDataCorrected = downVelData - pvd;

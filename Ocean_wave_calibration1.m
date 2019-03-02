@@ -86,3 +86,14 @@ plot ( Time, Corrected_Down);
 %Not bad.... but there's more to do...
 xlabel('Time (s)');
 ylabel('Corrected Down Position(m) ');
+
+
+% turning point analysis
+new_Corrected_Down = removeDriftTurningPoints(Time, Corrected_Down);
+
+% find amplitude of waves (peak to peak)
+amplitudes = findPeakToPeakAmplitudes(new_Corrected_Down);
+
+% display amplitudes
+disp("Amplitudes:");
+disp(amplitudes);

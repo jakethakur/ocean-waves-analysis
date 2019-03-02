@@ -29,15 +29,15 @@ function correctedY = removeDriftTurningPoints(time,yVals)
     correctedY = yVals - pvd;
     
     % visuals
-%     figure;
-%     hold on;
-%     plot(time, yVals); % initial curve
-%     plot(time(turningPoints), yVals(turningPoints), 'O'); % turning points
-%     plot(inflectionPoints(:, 1), inflectionPoints(:, 2), 'O'); % inflection points
-%     plot(time, pvd); % polyfit
-%     legend("initial data", "turning points", "inflection points", "polyfit");
-%     figure;
-%     plot(time, correctedY); % new curve
+    figure;
+    hold on;
+    plot(time, yVals); % initial curve
+    plot(time(turningPoints), yVals(turningPoints), 'O'); % turning points
+    plot(inflectionPoints(:, 1), inflectionPoints(:, 2), 'O'); % inflection points
+    plot(time, pvd); % polyfit
+    legend("initial data", "turning points", "inflection points", "polyfit");
+    figure;
+    plot(time, correctedY); % new curve
 
     % still not perfect
     % https://uk.mathworks.com/matlabcentral/fileexchange/54207-polyfix-x-y-n-xfix-yfix-xder-dydx

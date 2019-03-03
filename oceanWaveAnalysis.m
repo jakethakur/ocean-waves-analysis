@@ -3,11 +3,11 @@
 % -> output type column vectors -> import selection
 % then run this program (which will use the varName1 and varName2 vars)
 
-%time = VarName1;
-%rawDownData = VarName2;
+time = VarName1;
+rawDownData = VarName2;
 
-time = imudata(:, 1);
-rawDownData = (accel_ned(:, 3) - 1) * 9.81;
+%time = imudata(:, 1);
+%rawDownData = (accel_ned(:, 3) - 1) * 9.81;
 
 cadence = 5;
 %cadence = 500;
@@ -32,26 +32,26 @@ downVelDataCorrected = downVelData - pvd;
 % Raw down accelerometer data without linear drift removed
 figure;
 plot(time, downVelData);
-xlabel('time');
-ylabel('downVelData');
+xlabel('Time (s)');
+ylabel('Down Velocity (m/s)');
 
 
 % Down velocity data with a linear drift trend removed
-figure;
-plot(time, downVelDataDrift);
-xlabel('time');
-ylabel('downVelDataDrift');
+%figure;
+%plot(time, downVelDataDrift);
+%xlabel('time');
+%ylabel('downVelDataDrift');
 
 % Down velocity data corrected polyfit-corrected to attain a shape which resembles
 % what we expect from a wave, as well as the polyfitted values
 figure;
 plot(time, downVelDataCorrected);
-xlabel('time');
-ylabel('downVelDataCorrected');
+xlabel('Time (s)');
+ylabel('Down Velocity Corrected (m/s)');
 
 figure;
 plot(time, pvd);
-xlabel('time');
+xlabel('Time (s)');
 ylabel('pcd');
 
 
@@ -61,5 +61,5 @@ downDispData = cumtrapz(downVelDataCorrected);
 
 figure;
 plot(time, downDispData);
-xlabel('time');
-ylabel('downDispData');
+xlabel('Time (s)');
+ylabel('Down Displacement (m)');

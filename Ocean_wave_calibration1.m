@@ -24,6 +24,11 @@ xlabel('Time (s)');
 ylabel('NED accel (g)');
 legend('N', 'E', 'D');
 
+% just down position
+%plot (imudata(:,1), accel_ned(3, :));
+%xlabel('Time (s)');
+%ylabel('Down accel (g) ');
+
 prompt = 'What time do you wish to start analysis from? ';
 Time_window1 = input(prompt);
 prompt = 'What time do you wish to end the analysis? ';
@@ -33,18 +38,33 @@ Time_window2 = input(prompt);
 figure;
 % subplot (2,1,1);
 time = [diff(imudata(:,1)); 10];
-North = cumtrapz(imudata(:,1), 9.81 * accel_ned(:,1));
-North = cumtrapz(imudata(:,1), North);
-East = cumtrapz(imudata(:,1),  9.81 * accel_ned(:,2));
-East = cumtrapz(imudata(:,1), East);
-Down = cumtrapz(imudata(:,1), (9.81 * (accel_ned(:,3) - 1)));
-Down = cumtrapz(imudata(:,1), Down);
-%plot raw positions
-plot (imudata(:,1), North, imudata(:,1), East,imudata(:,1), Down);
+NorthVel = cumtrapz(imudata(:,1), 9.81 * accel_ned(:,1));
+North = cumtrapz(imudata(:,1), NorthVel);
+EastVel = cumtrapz(imudata(:,1),  9.81 * accel_ned(:,2));
+East = cumtrapz(imudata(:,1), EastVel);
+DownVel = cumtrapz(imudata(:,1), (9.81 * (accel_ned(:,3) - 1))); % integrate to velocity
+Down = cumtrapz(imudata(:,1), DownVel); % integrate to position
+% plot raw positions
+
+%plot (imudata(:,1), North, imudata(:,1), East,imudata(:,1), Down);
+
+%xlabel('Time (s)');
+%ylabel('NED Position (m) ')
+%legend('N', 'E', 'D');
+
+% raw down vel
+plot (imudata(:,1), DownVel);
 
 xlabel('Time (s)');
-ylabel('NED Position(m) ')
-legend('N', 'E', 'D');
+ylabel('Down Velocity (m) ');
+
+% just down raw position
+figure;
+
+plot (imudata(:,1), Down);
+
+xlabel('Time (s)');
+ylabel('Down Position (m) ');
 
 
 %find polyfit coefficient Values for each of North, East Down (PCN, PCE,
@@ -57,13 +77,14 @@ pce = polyfit(imudata(1:end-1,1),East(1:end-1,1),3);
 pve = polyval(pce,imudata(1:end-1,1));
 pcd = polyfit(imudata(1:end-1,1),Down(1:end-1,1),3);
 pvd = polyval(pcd,imudata(1:end-1,1));
-figure;
+
+%figure;
 % subplot (2,1,2);
 
-plot (imudata(1:end-1,1), Down(1:end-1,1) - pvd);
+%plot (imudata(1:end-1,1), Down(1:end-1,1) - pvd);
 %, imudata(:,1), East- pve,imudata(:,1), Down(:)- pvd
-xlabel('Time (s)');
-ylabel('North Position(m) ')
+%xlabel('Time (s)');
+%ylabel('Down Position (m) ');
 
 
 % 
@@ -85,7 +106,7 @@ plot ( Time, Corrected_Down);
 %Time, Corrected_North, Time, Corrected_East,
 %Not bad.... but there's more to do...
 xlabel('Time (s)');
-ylabel('Corrected Down Position(m) ');
+ylabel('Corrected Down Position (m) ');
 
 
 % turning point analysis
@@ -97,3 +118,8 @@ amplitudes = findPeakToPeakAmplitudes(new_Corrected_Down);
 % display amplitudes
 disp("Amplitudes:");
 disp(amplitudes);
+
+% error analysis (Sam)
+discrepancy = amplitudes * 0.5 - 0.47;
+disp("Discrepancy:");
+disp(discrepancy);

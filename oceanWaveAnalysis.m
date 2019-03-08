@@ -30,12 +30,12 @@ cadence = 5;
 
 % Cut down data to cadence (smaller sampling rate)
 % moving mean
-aveRawDownData = movmean(downAccel,cadence)-1;
+aveRawDownData = movmean(downAccel,cadence);
 % decimation (alternate method)
 %aveRawDownData = decimate(rawDownData,cadence);
 %time = decimate(time,cadence);
 
-% Integrate raw data into velocity and displacement
+% Integrate raw data into velocity
 downVelData = cumtrapz(9.81*aveRawDownData)*0.00005;
 
 

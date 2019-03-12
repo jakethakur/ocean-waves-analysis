@@ -1,3 +1,5 @@
+% subsections with polyfit taken over larger area than it is subtracted
+
 % Saving data as CSV:
 % First run raw vertigo file on load and transform data
 % Then run Convert_ocean_data.m to get this saved as a csv
@@ -51,24 +53,27 @@ ylabel('Raw Down Velocity (m/s)');
 % Analyse 30s of it at once; only apply this on the first 10s of that 30s
 
 % lengths in seconds
+lengthOfInterval = 90;
 lengthOfRemoval = 30; % length of proportion of interval that drift removal
 % is applied to
-numberOfIntervals = round(length(time) / (sampleRate*lengthOfRemoval));
+numberOfIntervals = round(length(time) / (sampleRate*lengthOfRemoval)) -...
+    round((lengthOfInterval/lengthOfRemoval) - 1);
 
 newDownVelData = zeros(length(downVelData), 1); % downVelDataCorrected
-
-downDispData = zeros(length(downVelData), 1); % displacement
 
 for i = 1:numberOfIntervals
     
     % Positions of data analysis
     startPos = (i-1)*sampleRate*lengthOfRemoval + 1;
     endPos = i*sampleRate*lengthOfRemoval;
+    % end pos of interval
+    extendedEndPos = endPos + ...
+        sampleRate*(lengthOfInterval - lengthOfRemoval);
     
     % Init subplot for this interval
     figure;
     % Raw data plot
-    subplot(2,3,1);
+    subplot(2,2,1);
     plot(time(startPos:endPos), downVelData(startPos:endPos));
     title('1: Raw Data');
     xlabel('Time (s)');
@@ -80,48 +85,40 @@ for i = 1:numberOfIntervals
         detrend(downVelData(startPos:endPos));
     
     % Plot detrended data
-    subplot(2,3,2);
+    subplot(2,2,2);
     plot(time(startPos:endPos), newDownVelData(startPos:endPos));
     title('2: Detrended data');
     xlabel('Time (s)');
     ylabel('Down Velocity (m/s)');
 
-    
-    % Integrate again to find down displacement data (before polyfit)
-    downDispData(startPos:endPos) = ...
-        cumtrapz(newDownVelData(startPos:endPos));
-    
-    % Plot displacement data
-    subplot(2,3,3);
-    plot(time(startPos:endPos), downDispData(startPos:endPos));
-    title('3: Displacement');
-    xlabel('Time (s)');
-    ylabel('Down Position (m)');
-
-    % Attempt to curve fit all of the data after linear drift has
-    % been removed
-    pvalue = 2; % TBD decide which is best
-    pcd = polyfit...
-        (time(startPos:endPos), downDispData(startPos:endPos), pvalue);
-    pvd = polyval(pcd, time(startPos:endPos));
-    downDispData(startPos:endPos) = ...
-        downDispData(startPos:endPos) - pvd;
+    % Attempt to curve fit all of the data after linear drift has been removed
+    pvalue = 3; % TBD decide which is best
+    pcd = polyfit(time(startPos:extendedEndPos), ...
+        newDownVelData(startPos:extendedEndPos), pvalue);
+    pvd = polyval(pcd, time(startPos:extendedEndPos));
+    newDownVelData(startPos:endPos) = ...
+        newDownVelData(startPos:endPos) - pvd(1:endPos-startPos+1);
     
     % Plot data with polyfit subtracted
-    subplot(2,3,4);
-    plot(time(startPos:endPos), downDispData(startPos:endPos));
-    title('4: Polyfit subtracted from data');
+    subplot(2,2,3);
+    plot(time(startPos:endPos), newDownVelData(startPos:endPos));
+    title('3: Polyfit subtracted from data');
     xlabel('Time (s)');
-    ylabel('Down Position (m)');
+    ylabel('Down Velocity (m/s)');
     
     % Plot polyfit
-    subplot(2,3,5);
-    plot(time(startPos:endPos), pvd);
+    subplot(2,2,4);
+    hold on;
+    plot(time(startPos:extendedEndPos),pvd); % full pvd in different colour
+    plot(time(startPos:endPos), pvd(1:endPos-startPos+1));
     title('Polyfit');
     xlabel('Time (s)');
     ylabel('pvd');
     
 end
+
+% Integrate again to find down displacement data
+downDispData = cumtrapz(newDownVelData);
 
 % Plot displacement wave graph (each individual section different colour):
 figure;

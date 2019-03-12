@@ -36,7 +36,7 @@ aveRawDownData = movmean(downAccel,cadence);
 %time = decimate(time,cadence);
 
 % Integrate raw data into velocity
-downVelData = cumtrapz(9.81*aveRawDownData)*0.00005;
+downVelData = cumtrapz(aveRawDownData)*0.00005;
 
 
 % Plot raw down velocity

@@ -55,9 +55,11 @@ lengthOfRemoval = 30; % length of proportion of interval that drift removal
 % is applied to
 numberOfIntervals = round(length(time) / (sampleRate*lengthOfRemoval));
 
-newDownVelData = zeros(length(downVelData), 1); % downVelDataCorrected
+dataLength = numberOfIntervals * lengthOfRemoval * sampleRate;
 
-downDispData = zeros(length(downVelData), 1); % displacement
+newDownVelData = zeros(dataLength, 1); % downVelDataCorrected
+
+downDispData = zeros(dataLength, 1); % displacement
 
 for i = 1:numberOfIntervals
     

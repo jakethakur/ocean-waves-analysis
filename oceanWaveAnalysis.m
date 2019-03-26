@@ -31,6 +31,8 @@ cadence = 5;
 % Cut down data to cadence (smaller sampling rate)
 % moving mean
 aveRawDownData = movmean(downAccel,cadence);
+aveRawDownData = decimate(aveRawDownData,cadence);
+time = decimate(time,cadence);
 % decimation (alternate method)
 %aveRawDownData = decimate(rawDownData,cadence);
 %time = decimate(time,cadence);
@@ -86,3 +88,6 @@ xlabel('Time (s)');
 ylabel('Down Displacement (m)');
 
 % Now perform turning point analysis on the wave...
+
+% turning point analysis
+%downDispDataTurningPoints = removeDriftTurningPoints(Time, downDispData);

@@ -1,5 +1,6 @@
+% Run after ocean waves analysis
 
-FFTinput = (accel_ned(:,1));
+FFTinput = downAccel; % input variable
 
 
 xdft = fft(FFTinput(:,1));
@@ -8,17 +9,17 @@ xdft = fft(FFTinput(:,1));
 
      % sampling interval -- assuming equal sampling
 %      DT = imudata(2,1)-imudata(1,1);
-DT = 0.01
+DT = 0.005;
      % sampling frequency
      Fs = 1/DT;
      DF = Fs/length(FFTinput);
      freq = 0:DF:Fs/2;
-    Freq = freq'
+     Freq = freq';
      xdft = xdft(1:round(length(xdft)/2,1));
      figure;
      z= abs(xdft);
-     plot(Freq(1:50,1),z(1:50,1));
-     xlim([0.2 1]);
+     plot(Freq(1:10000,1),movmean(z(1:10000,1),50));
+     xlim([0.0 1]);
      title('Accel')
 xlabel('f /Hz')
 ylabel('Relative Amplitude')

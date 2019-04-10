@@ -7,14 +7,14 @@
 % -> output type column vectors -> import selection
 % then run this program (which will use the VarName1 and VarName2 vars)
 
-time = VarName1;
-rawDownData = VarName2;
+%time = VarName1;
+%rawDownData = VarName2;
 
 % Alternatively the following code can be run instead to use ocean data
 % variables straight after load and transform data
 
-% time = imudata(:, 1);
-% rawDownData = accel_ned(:, 3);
+time = imudata(:, 1);
+rawDownData = accel_ned(:, 3);
 
 % Sampling rate of IMU in Hz
 sampleRate = 200;
@@ -61,7 +61,7 @@ ylabel('Raw Down Displacement (m)');
 % lengths in seconds
 lengthOfRemoval = 30; % length of proportion of interval that drift removal
 % is applied to
-numberOfIntervals = round(length(time) / (sampleRate*lengthOfRemoval));
+numberOfIntervals = floor(length(time) / (sampleRate*lengthOfRemoval));
 
 downDispDataCorrected = zeros(length(downDispData), 1);
 

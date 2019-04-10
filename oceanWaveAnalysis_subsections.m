@@ -53,7 +53,7 @@ ylabel('Raw Down Velocity (m/s)');
 % lengths in seconds
 lengthOfRemoval = 30; % length of proportion of interval that drift removal
 % is applied to
-numberOfIntervals = round(length(time) / (sampleRate*lengthOfRemoval));
+numberOfIntervals = floor(length(time) / (sampleRate*lengthOfRemoval));
 
 dataLength = numberOfIntervals * lengthOfRemoval * sampleRate;
 

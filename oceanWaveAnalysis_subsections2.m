@@ -9,14 +9,14 @@
 % -> output type column vectors -> import selection
 % then run this program (which will use the VarName1 and VarName2 vars)
 
-time = VarName1;
-rawDownData = VarName2;
+% time = VarName1;
+% rawDownData = VarName2;
 
 % Alternatively the following code can be run instead to use ocean data
 % variables straight after load and transform data
 
-% time = imudata(:, 1);
-% rawDownData = accel_ned(:, 3);
+time = imudata(:, 1);
+rawDownData = accel_ned(:, 3);
 
 % Sampling rate of IMU in Hz
 sampleRate = 200;

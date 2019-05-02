@@ -49,13 +49,13 @@ ylabel('Raw Down Velocity (m/s)');
 
 % Since velocity has a linear drift, detrend can be applied to remove the
 % main body of this drift
-downVelData = detrend(downVelData);
-
-% Plot down velocity data with a linear drift trend removed
-figure;
-plot(time, downVelData);
-xlabel('Time (s)');
-ylabel('Detrended Down Velocity (m/s)');
+% downVelData = detrend(downVelData);
+% 
+% % Plot down velocity data with a linear drift trend removed
+% figure;
+% plot(time, downVelData);
+% xlabel('Time (s)');
+% ylabel('Detrended Down Velocity (m/s)');
 
 
 % Attempt to curve fit all of the data after linear drift has been removed
@@ -90,4 +90,4 @@ ylabel('Down Displacement (m)');
 % Now perform turning point analysis on the wave...
 
 % turning point analysis
-%downDispDataTurningPoints = removeDriftTurningPoints(Time, downDispData);
+downDispDataTurningPoints = removeDriftTurningPoints(time, downDispData);

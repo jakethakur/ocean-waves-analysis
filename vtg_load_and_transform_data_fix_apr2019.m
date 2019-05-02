@@ -18,6 +18,7 @@ csvdata = readtable([csvpath csvfile], 'Delimiter',',','ReadVariableNames',false
 % convert date to ms
 times = seconds(datetime(table2cell(csvdata(:,1)), 'InputFormat', 'yyyy-MM-dd HH:mm:ss.SSS') - datetime(2018,1,1))*1000;
 csvdata.Var1 = times;
+
 csvdata = table2array(csvdata);
 
 % Fix timer rollover

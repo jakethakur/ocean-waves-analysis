@@ -59,7 +59,7 @@ ylabel('Raw Down Displacement (m)');
 % Iterate through subsections of the data
 
 % lengths in seconds
-lengthOfRemoval = 30; % length of proportion of interval that drift removal
+lengthOfRemoval = 15; % length of proportion of interval that drift removal
 % is applied to
 numberOfIntervals = floor(length(time) / (sampleRate*lengthOfRemoval));
 

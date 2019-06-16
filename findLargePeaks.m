@@ -1,5 +1,5 @@
-function [largePeakTimes, largePeakYVals] = findLargePeaks(time, yVals)
-    turningPoints = findTurningPoints(time, yVals);
+function [largePeakTimes, largePeakYVals] = findLargePeaks(time, yVals, stdTolerance)
+    turningPoints = findTurningPoints(yVals);
 
     % vector of y value positions and times of turning points
     positions = zeros(length(turningPoints), 1);
@@ -13,21 +13,21 @@ function [largePeakTimes, largePeakYVals] = findLargePeaks(time, yVals)
     stdAmplitude = std(positions);
     
     largePeakPositions = []; % index of used turning points in turningPoints
-    expected = null; % max or min point
+    expected = "0"; % max or min point
     % null because either max or min point can be first
     
     for i = 1:length(turningPoints)-1
-        if positions(i) > meanAmplitude + stdAmplitude*1.5 &&...
+        if positions(i) > meanAmplitude + stdAmplitude*stdTolerance &&...
             expected ~= "min"
             % maximum point
             expected = "min"; % next point should be minimum
-            largePeakPositions(end) = i;
+            largePeakPositions = [largePeakPositions i];
             
-        elseif positions(i) < -meanAmplitude - stdAmplitude*1.5 &&...
+        elseif positions(i) < -meanAmplitude - stdAmplitude*stdTolerance &&...
             expected ~= "max"
             % minimum point
             expected = "max"; % next point should be minimum
-            largePeakPositions(end) = i;
+            largePeakPositions = [largePeakPositions i];
             
         end
     end
@@ -37,7 +37,12 @@ function [largePeakTimes, largePeakYVals] = findLargePeaks(time, yVals)
     largePeakYVals = zeros(length(largePeakPositions), 1);
     for i = 1:length(largePeakPositions)
         largePeakTimes(i) = times(largePeakPositions(i));
-        largePeakYVals(i) = yVals(largePeakPositions(i));
+        largePeakYVals(i) = positions(largePeakPositions(i));
     end
+    
+    figure;
+    hold on;
+    plot(time, yVals);
+    scatter(largePeakTimes, largePeakYVals);
 end
 

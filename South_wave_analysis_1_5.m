@@ -5,12 +5,13 @@ Time_window2 = input(prompt);
 
 % uses variables down (down accel) and time
 
+time = time(220*Time_window1:220*Time_window2);
 figure;
 % subplot (2,1,1);
-downVel = cumtrapz(time(220*Time_window1:220*Time_window2), (9.81 * (down(220*Time_window1:220*Time_window2) - 1)));
-downDisp = cumtrapz(time(220*Time_window1:220*Time_window2), downVel);
+downVel = cumtrapz(time, (9.81 * (down(220*Time_window1:220*Time_window2) - 1)));
+downDisp = cumtrapz(time, downVel);
 % plot raw displacement positions
-plot (time(220*Time_window1:220*Time_window2), downDisp);
+plot (time, downDisp);
 
 xlabel('Time (s)');
 ylabel('D Position (m) ')
@@ -21,12 +22,11 @@ legend('D');
 %PCD) with polynomial of order 10- which may well be excessive.
 % Create a polyfit values (PVN, PVE, PVD) for all times (imudata (:,1) -all times from
 % column 1)
-pcd = polyfit(time(220*Time_window1:220*Time_window2),downDisp,4);
-pvd = polyval(pcd,time(220*Time_window1:220*Time_window2));
-
+pcd = polyfit(time,downDisp,4);
+pvd = polyval(pcd,time);
 % subplot (2,1,2);
 figure;
-plot (time(220*Time_window1:220*Time_window2), downDisp - pvd);
+plot (time, downDisp - pvd);
 xlabel('Time (s)');
 ylabel('Down Position(m) ')
 % xlim([Time_window1 Time_window2]);

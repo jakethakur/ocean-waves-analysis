@@ -1,16 +1,12 @@
 function [sigWaveHeight] = waveStatistics(yVals)
 
-    meanElevation = mean(yVals); 
-    rmsElevation = rms(yVals); 
-    stdElevation = std(yVals);
-    sigWaveHeight = 4 * stdElevation;
+    meanElevation = mean(yVals); %% should be ~ 0 
+    rmsElevation = rms(yVals); %% root mean square of values
+    sigWaveHeight = 4 * std(yVals); %% significant wave height
     
     
-    disp(['Standard dev. of wave elevation = ',num2str(stdElevation),'.']);
-    disp(['Significant wave height = ',num2str(sigWaveHeight),'.']);
-    disp(['Mean elevation = ',num2str(meanElevation),'.']);
-    disp(['RMS elevation = ',num2str(rmsElevation),'.']);
-    disp('-');
-    disp('-');
+    disp([...
+        'Significant wave height = ',num2str(sigWaveHeight), 'm', newline...
+        'Mean elevation = ',num2str(meanElevation),'m    RMS elevation = ',num2str(rmsElevation),'m', newline, newline]); 
     
 end

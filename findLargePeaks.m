@@ -13,20 +13,20 @@ function [largePeakTimes, largePeakYVals] = findLargePeaks(time, yVals, stdToler
     stdAmplitude = std(positions);
     
     largePeakPositions = []; % index of used turning points in turningPoints
-    expected = "0"; % max or min point
+    expected = 0; % max or min point
     % null because either max or min point can be first
     
     for i = 1:length(turningPoints)-1
         if positions(i) > meanAmplitude + stdAmplitude*stdTolerance &&...
-            expected ~= "min"
+            expected ~= 1
             % maximum point
-            expected = "min"; % next point should be minimum
+            expected = 1; % next point should be minimum
             largePeakPositions = [largePeakPositions i];
             
         elseif positions(i) < -meanAmplitude - stdAmplitude*stdTolerance &&...
-            expected ~= "max"
+            expected ~= 2
             % minimum point
-            expected = "max"; % next point should be minimum
+            expected = 2; % next point should be minimum
             largePeakPositions = [largePeakPositions i];
             
         end
@@ -51,9 +51,10 @@ function [largePeakTimes, largePeakYVals] = findLargePeaks(time, yVals, stdToler
     stdElevation = std(yVals);
     sigWaveHeight = 4 * stdElevation;
     
-    disp(['Standard dev. of wave elevation = ',num2str(stdElevation),'.'])
-    disp(['Significant wave height = ',num2str(sigWaveHeight),'.'])
-    disp(['Mean elevation = ',num2str(meanElevation),'.'])
-    disp(['RMS elevation = ',num2str(rmsElevation),'.'])
+    disp(['Standard dev. of wave elevation = ',num2str(stdElevation),'.']);
+    disp(['Significant wave height = ',num2str(sigWaveHeight),'.']);
+    disp(['Mean elevation = ',num2str(meanElevation),'.']);
+    disp(['RMS elevation = ',num2str(rmsElevation),'.']);
+    
 end
 

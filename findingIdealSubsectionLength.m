@@ -10,6 +10,9 @@
 time = VarName1;
 rawDownData = VarName2;
 
+smallestRange = 100;
+idealSubsection = 1;
+
 % Alternatively the following code can be run instead to use ocean data
 % variables straight after load and transform data
 
@@ -33,6 +36,7 @@ downAccel = (rawDownData1 - 1) * 9.81;
 % Plot raw down accel
 
 cadence = 5;
+sigWaveHeights = []; % simply an empty matrix for later
 
 % Cut down data to cadence (smaller sampling rate)
 % moving mean
@@ -52,20 +56,20 @@ downDispData = cumtrapz(downVelData);
 % Iterate through subsections of the data
 f1 = figure;
 hold on;
-for j = 1:1:100
+
+% Iterate between a range of subsections
+for subsectionLength = 1:1:30   % length of proportion of interval that drift removal
+                                % is applied to
     
-    % lengths in seconds
-    lengthOfRemoval = j; % length of proportion of interval that drift removal
-    % is applied to
-    numberOfIntervals = floor(length(time1) / (sampleRate*lengthOfRemoval));
+    numberOfIntervals = floor(length(time1) / (sampleRate*subsectionLength));
 
     downDispDataCorrected = zeros(length(downDispData), 1);
 
     for i = 1:numberOfIntervals
 
         % Positions of data analysis
-        startPos = (i-1)*sampleRate*lengthOfRemoval + 1;
-        endPos = i*sampleRate*lengthOfRemoval;
+        startPos = (i-1)*sampleRate*subsectionLength+ 1;
+        endPos = i*sampleRate*subsectionLength;
 
 
 
@@ -90,8 +94,8 @@ for j = 1:1:100
 
     for i = 1:numberOfIntervals
 
-        startPos = (i-1)*sampleRate*lengthOfRemoval + 1;
-        endPos = i*sampleRate*lengthOfRemoval;
+        startPos = (i-1)*sampleRate*subsectionLength + 1;
+        endPos = i*sampleRate*subsectionLength;
 
         plot(time1(startPos:endPos), downDispDataCorrected(startPos:endPos));
 
@@ -100,16 +104,36 @@ for j = 1:1:100
     % Labels for final displacement wave graph
     xlabel('Time (s)');
     ylabel('Down Displacement (m)');
-    title(['Sub. Length = ', num2str(j)]); 
-    % Now perform turning point analysis on the wave...
+    title(['Sub. Length = ', num2str(subsectionLength)]); 
     
-    disp(num2str(j));
-    statistics = waveStatistics(movmean(downDispDataCorrected,100));
+    disp(num2str(subsectionLength)); 
+    sigWaveHeight = waveStatistics(movmean(downDispDataCorrected,100));
     
+    lengths = 1:30; 
+    sigWaveHeights = [sigWaveHeights, sigWaveHeight];
+   
     figure(f1);
     
-    scatter(j, statistics);
+    % plot a graph of sig. wave heights vs subsection length.
+    scatter(subsectionLength, sigWaveHeight);
     xlabel('Length of subsection /s');
     ylabel('sigWaveHeight /m');
+    
+    
+end
+lengthsHeights = [lengths; sigWaveHeights];
+ 
+
+
+for i = 2:29
+     adjacents = [lengthsHeights(2,i), lengthsHeights(2,i-1), lengthsHeights(2,i+1)];
+     if ( std(adjacents) < smallestRange) 
+         idealSubsection = i;
+         smallestRange = std(adjacents);
+     end
 end 
+
+ disp(['Ideal subsection length: ', num2str(idealSubsection)]);
+ disp('Sig wave height at ideal subsection length:');
+ disp(sigWaveHeights(idealSubsection));
 

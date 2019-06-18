@@ -58,7 +58,7 @@ f1 = figure;
 hold on;
 
 % Iterate between a range of subsections
-for subsectionLength = 1:1:30   % length of proportion of interval that drift removal
+for subsectionLength = 1:1:20   % length of proportion of interval that drift removal
                                 % is applied to
     
     numberOfIntervals = floor(length(time1) / (sampleRate*subsectionLength));
@@ -109,7 +109,7 @@ for subsectionLength = 1:1:30   % length of proportion of interval that drift re
     disp(num2str(subsectionLength)); 
     sigWaveHeight = waveStatistics(movmean(downDispDataCorrected,100));
     
-    lengths = 1:30; 
+    lengths = 1:20; 
     sigWaveHeights = [sigWaveHeights, sigWaveHeight];
    
     figure(f1);
@@ -125,7 +125,7 @@ lengthsHeights = [lengths; sigWaveHeights];
  
 
 
-for i = 2:29
+for i = 2:19
      adjacents = [lengthsHeights(2,i), lengthsHeights(2,i-1), lengthsHeights(2,i+1)];
      if ( std(adjacents) < smallestRange) 
          idealSubsection = i;

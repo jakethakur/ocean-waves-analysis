@@ -1,25 +1,27 @@
 function correctedY = removeDriftTurningPoints(time,yVals)
-    turningPoints = findTurningPoints(yVals); % locations of turning points in yVals
+    % locations of turning points
+    [turningPointTimes,turningPointYVals] = returnTurningPoints(time, yVals);
     
-    % find inflection points
-    inflectionPoints = zeros(length(turningPoints) - 1, 2);
-    for i = 1:length(inflectionPoints)
+    % find equilibrium points
+    equilibriumPoints = zeros(length(turningPointTimes) - 1, 2);
+    for i = 1:length(equilibriumPoints)
         % index of analysed turning points
         t1Index = i;
         t2Index = i + 1;
         
         % avg time
-        t = (time(turningPoints(t1Index)) + time(turningPoints(t2Index))) / 2;
+        t = (turningPointTimes(t1Index) + turningPointTimes(t2Index)) / 2;
         
         % avg y value
-        y = (yVals(turningPoints(t1Index)) + yVals(turningPoints(t2Index))) / 2;
+        y = (turningPointYVals(t1Index) + turningPointYVals(t2Index)) / 2;
         
-        inflectionPoints(i, 1) = t;
-        inflectionPoints(i, 2) = y;
+        equilibriumPoints(i, 1) = t;
+        equilibriumPoints(i, 2) = y;
     end
     
-    % take polyfit of inflection points
-    pcd = polyfit(inflectionPoints(:, 1),inflectionPoints(:, 2),3);
+    % take polyfit of equilibrium points
+    pvalue = 4;
+    pcd = polyfit(equilibriumPoints(:, 1),equilibriumPoints(:, 2),pvalue);
     pvd = polyval(pcd,time);
     
     % subtract this polyfit
@@ -29,10 +31,10 @@ function correctedY = removeDriftTurningPoints(time,yVals)
     figure;
     hold on;
     plot(time, yVals); % initial curve
-    plot(time(turningPoints), yVals(turningPoints), 'O'); % turning points
-    plot(inflectionPoints(:, 1), inflectionPoints(:, 2), 'O'); % inflection points
+    plot(turningPointTimes, turningPointYVals, 'O'); % turning points
+    plot(equilibriumPoints(:, 1), equilibriumPoints(:, 2), 'O'); % equilibrium points
     plot(time, pvd); % polyfit
-    legend("initial data", "turning points", "inflection points", "polyfit");
+    legend("initial data", "turning points", "equilibrium points", "polyfit");
     xlabel('Time (s)');
     ylabel('Down Position (m)');
     

@@ -1,6 +1,6 @@
 % Run after ocean waves analysis or after importing data
 
-FFTinput = VarName2(1:end); % input variable
+FFTinput = downDispDataCorrected(1:end); % input variable
 
 %
 % Fourier transform
@@ -35,8 +35,18 @@ plot(Freq(1:end-1,1),z);
 
 % limit the x values shown on the graph
 % (play around with these values to get a useful graph)
-xlim([0.0 1.5]); 
+axisMin = 0.0;
+axisMax = 2.5;
+xlim([axisMin axisMax]); 
 
-title('Accel')
+% optional x axis resolution
+axisIncrement = 0.25;
+xAxisValues = [];
+for i = axisMin:axisIncrement:axisMax
+    xAxisValues = [xAxisValues i];
+end
+xticks(xAxisValues);
+
+title('Displacement')
 xlabel('f /Hz')
 ylabel('Relative Amplitude')

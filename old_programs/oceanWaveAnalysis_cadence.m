@@ -7,8 +7,8 @@ time = VarName1;
 rawDownData = VarName2;
 
 cadenceStart = 1;
-cadenceIncrement = 200;
-cadenceFinish = 5001;
+cadenceIncrement = 50;
+cadenceFinish = 250;
 
 prompt = 'What time do you wish to start analysis from? ';
 Time_window1 = input(prompt);
@@ -33,21 +33,21 @@ for cadence = cadenceStart:cadenceIncrement:cadenceFinish % iterate cadence
 
     % Integrating raw data into velocity and displacement
     downVelData = cumtrapz(9.81*aveRawDownData)*0.00005;
-    %downVelDataDrift = detrend(downVelData);
-
-    % Attempt to curve fit all of the data after linear drift has been removed.
-    pvalue = 3; % used to be 4
-    pcd = polyfit(time, downVelData, pvalue);
-    pvd = polyval(pcd, time);
-    downVelDataCorrected = downVelData - pvd;
+    downVelData = detrend(downVelData);
 
     % Down displacement data shown after finding cumulative trapeziums of the
     % velocity data
-    downDispData = cumtrapz(downVelDataCorrected);
+    downDispData = cumtrapz(downVelData);
+
+    % Attempt to curve fit all of the data after linear drift has been removed.
+    pvalue = 4; % used to be 4
+    pcd = polyfit(time, downDispData, pvalue);
+    pvd = polyval(pcd, time);
+    downDispDataCorrected = downDispData - pvd;
 
     figure;
-    plot(time, downDispData);
+    plot(time, downDispDataCorrected);
     xlabel('time');
-    ylabel('downDispData');
+    ylabel('Down Displacement (m)');
 
 end

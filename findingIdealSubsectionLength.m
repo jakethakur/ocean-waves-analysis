@@ -104,18 +104,18 @@ for subsectionLength = subsectionLengthMin:subsectionLengthInterval:subsectionLe
         startPos = (i-1)*sampleRate*subsectionLength + 1;
         endPos = i*sampleRate*subsectionLength;
 
-        plot(time1(startPos:endPos), downDispDataCorrected(startPos:endPos));
+        %plot(time1(startPos:endPos), downDispDataCorrected(startPos:endPos));
 
     end
 
     % Labels for final displacement wave graph for this subsection length
-    xlabel('Time (s)');
-    ylabel('Down Displacement (m)');
-    title(['Sub. Length = ', num2str(subsectionLength)]); 
+    %xlabel('Time (s)');
+   % ylabel('Down Displacement (m)');
+    %title(['Sub. Length = ', num2str(subsectionLength)]); 
     
     % output information to console
     disp(num2str(subsectionLength)); 
-    sigWaveHeight = waveStatistics(movmean(downDispDataCorrected,100));
+    sigWaveHeight = waveStatistics(movmean(downDispDataCorrected,50));
     
     % array of sig wave heights for each subsection length
     sigWaveHeights = [sigWaveHeights, sigWaveHeight];
@@ -135,12 +135,12 @@ lengthsHeights = [lengths; sigWaveHeights];
 for i = 2:length(lengthsHeights)-1
      adjacents = [lengthsHeights(2,i), lengthsHeights(2,i-1), lengthsHeights(2,i+1)];
      if (std(adjacents) < smallestRange)
-         idealSubsection = i;
+         idealSubsection = lengthsHeights(1,i);
          smallestRange = std(adjacents);
      end
 end 
 
  disp(['Ideal subsection length: ', num2str(idealSubsection)]);
  disp('Sig wave height at ideal subsection length:');
- disp(sigWaveHeights(idealSubsection));
+ disp(lengthsHeights(2,idealSubsection));
 
